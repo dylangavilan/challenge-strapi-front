@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import style from "./form.module.css";
+// import { useHistory } from "react-router-dom";
 import { Form } from "react-bootstrap";
 function validate(input, exact) {
   let errors = {};
@@ -33,6 +34,7 @@ export default function Formulario({ razas }) {
   const [raza, setRaza] = useState("");
   const [type, setType] = useState("");
   const [errors, setErrors] = useState({});
+
   async function handleSubmit(e) {
     e.preventDefault();
     try {
@@ -48,8 +50,9 @@ export default function Formulario({ razas }) {
           sexo: input.sexo,
         }
       );
-      if (response === "Creado") {
+      if (response.data === "Creado") {
         alert("Mascota creada");
+        setInput({});
         return;
       }
       alert("Intente nuevamente");
@@ -74,20 +77,20 @@ export default function Formulario({ razas }) {
       )
     );
   };
-  console.log(raza);
-  console.log(razas);
+  console.log(type);
   return (
     <div className={style.all}>
       <div className={style.container}>
         <form onSubmit={(e) => handleSubmit(e)}>
           <h1>Agrega tu mascota!</h1>
-
           <div className={style.subcontainer}>
             <label className={style.label}>Nombre</label>
             <input
               type="nombre"
+              autoComplete="off"
               placeholder="Ingrese nombre"
               name="name"
+              value={input.name}
               onChange={(e) => {
                 onChangeInput(e);
               }}
@@ -119,6 +122,7 @@ export default function Formulario({ razas }) {
               <input
                 type="date"
                 name="date"
+                value={input.date}
                 onChange={(e) => {
                   onChangeInput(e);
                 }}
@@ -130,7 +134,7 @@ export default function Formulario({ razas }) {
               <label className={style.label}>Edad</label>
               <input
                 type="number"
-                min=""
+                min="0"
                 max={type === "year" ? "60" : "12"}
                 name="years"
                 onChange={(e) => {
@@ -144,7 +148,7 @@ export default function Formulario({ razas }) {
                 }}
               >
                 <option value="year">Años</option>
-                <option value="month">Meses</option>
+                <option value="months">Meses</option>
               </Form.Control>
               {errors.years ? errors.years : ""}
             </div>

@@ -9,7 +9,7 @@ function App() {
     let razas = await axios.get("http://localhost:1337/razas");
     setRazas(razas.data);
   };
-  console.log(razas);
+
   useEffect(() => {
     getAll();
   }, []);
