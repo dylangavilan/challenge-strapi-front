@@ -15,9 +15,9 @@ export default function Home() {
   return (
     <div className={style.container}>
       <div className={style.subcontainer}>
-        <button>
-          <Link to="/form">Agrega tu mascota</Link>
-        </button>
+        <Link to="/form">
+          <button className={style.button}>Agrega tu mascota</button>
+        </Link>
       </div>
       {mascotas?.map((c) => {
         return <Card mascotas={c} />;

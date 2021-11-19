@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import style from "./form.module.css";
-// import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Form } from "react-bootstrap";
 function validate(input, exact) {
   let errors = {};
@@ -53,6 +53,7 @@ export default function Formulario({ razas }) {
       if (response.data === "Creado") {
         alert("Mascota creada");
         setInput({});
+        window.location = "/";
         return;
       }
       alert("Intente nuevamente");
@@ -77,9 +78,11 @@ export default function Formulario({ razas }) {
       )
     );
   };
-  console.log(type);
   return (
     <div className={style.all}>
+      <Link to="/">
+        <button className={style.button}>Volver</button>
+      </Link>
       <div className={style.container}>
         <form onSubmit={(e) => handleSubmit(e)}>
           <h1>Agrega tu mascota!</h1>
