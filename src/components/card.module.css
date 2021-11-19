@@ -1,0 +1,18 @@
+.card {
+  display: inline-flex;
+  justify-content: space-around;
+  margin: auto;
+}
+.body {
+  width: 13rem;
+  height: 10rem;
+  margin: 15px 15px;
+  font-family: "Raleway", sans-serif;
+  letter-spacing: 1.4px;
+  background-color: whitesmoke;
+  text-align: center;
+  align-items: center;
+  border: 1px solid;
+  box-shadow: 5px 5px 5px grey;
+  border-radius: 5px;
+}

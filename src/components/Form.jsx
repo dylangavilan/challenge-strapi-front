@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import style from "./form.module.css";
-import { Button, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 function validate(input, exact) {
   let errors = {};
   console.log(input, exact);
@@ -13,7 +13,8 @@ function validate(input, exact) {
   }
   if (exact && !input.date) {
     errors.date = "Fecha requerida";
-  } else if (!exact && input.years === 0) {
+  }
+  if (!exact && input.years === 0) {
     errors.years = "Edad requerida";
   }
   if (!input.sexo) {
@@ -62,111 +63,121 @@ export default function Formulario({ razas }) {
       )
     );
   };
-  console.log(errors ? errors : "no hay");
   return (
-    <div className="container">
-      <Form onSubmit={(e) => handleSubmit(e)}>
-        <Form.Group className="mb-3">
-          <Form.Label>Nombre</Form.Label>
-          <Form.Control
-            type="nombre"
-            placeholder="Ingrese nombre"
-            name="name"
-            onChange={(e) => {
-              onChangeInput(e);
-            }}
-          />
-        </Form.Group>
-        <div>
-          <button
-            onClick={(e) => {
-              setExact(true);
-              e.preventDefault();
-            }}
-          >
-            Fecha exacta
-          </button>
-          <button
-            onClick={(e) => {
-              setExact(false);
-              e.preventDefault();
-            }}
-          >
-            Aproximado
-          </button>
-        </div>
-        {exact ? (
-          <div>
-            <label>Fecha de nacimiento</label>
+    <div className={style.all}>
+      <div className={style.container}>
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <h1>Agrega tu mascota!</h1>
+
+          <div className={style.subcontainer}>
+            <label className={style.label}>Nombre</label>
             <input
-              type="date"
-              name="date"
+              type="nombre"
+              placeholder="Ingrese nombre"
+              name="name"
               onChange={(e) => {
                 onChangeInput(e);
               }}
             />
-            {errors.date ? errors.date : ""}
           </div>
-        ) : (
-          <div>
-            <label>Edad</label>
+          <div className={style.subcontainer}>
+            <button
+              className={exact ? style.marcado : style.normal}
+              onClick={(e) => {
+                setExact(true);
+                e.preventDefault();
+              }}
+            >
+              Fecha exacta
+            </button>
+            <button
+              className={!exact ? style.marcado : style.normal}
+              onClick={(e) => {
+                setExact(false);
+                e.preventDefault();
+              }}
+            >
+              Aproximado
+            </button>
+          </div>
+          {exact ? (
+            <div className={style.subcontainer}>
+              <label className={style.label}>Fecha de nacimiento</label>
+              <input
+                type="date"
+                name="date"
+                onChange={(e) => {
+                  onChangeInput(e);
+                }}
+              />
+              {errors.date ? errors.date : ""}
+            </div>
+          ) : (
+            <div className={style.subcontainer}>
+              <label className={style.label}>Edad</label>
+              <input
+                type="number"
+                min=""
+                max={type === "year" ? "60" : "12"}
+                name="years"
+                onChange={(e) => {
+                  onChangeInput(e);
+                }}
+              />
+              <Form.Control
+                as="select"
+                onChange={(e) => {
+                  setType(e.target.value);
+                }}
+              >
+                <option value="year">Años</option>
+                <option value="month">Meses</option>
+              </Form.Control>
+              {errors.years ? errors.years : ""}
+            </div>
+          )}
+          <div className={style.subcontainer}>
             <input
-              type="number"
-              min=""
-              max={type === "year" ? "60" : "12"}
-              name="years"
-              onChange={(e) => {
+              className={input.sexo === "Macho" ? style.marcado : style.normal}
+              type="button"
+              value="Macho"
+              name="sexo"
+              onClick={(e) => {
                 onChangeInput(e);
               }}
             />
+            <input
+              className={input.sexo === "Hembra" ? style.marcado : style.normal}
+              type="button"
+              value="Hembra"
+              name="sexo"
+              onClick={(e) => {
+                onChangeInput(e);
+              }}
+            />
+            {errors.sexo ? errors.sexo : ""}
+          </div>
+          <div className={style.subcontainer}>
             <Form.Control
               as="select"
               onChange={(e) => {
-                console.log("e.target.value", e.target.value);
-                setType(e.target.value);
+                setRaza(e.target.value);
               }}
             >
-              <option value="year">Años</option>
-              <option value="month">Meses</option>
+              <option>Agregue una raza</option>
+              {razas &&
+                razas.map((c) => {
+                  return <option value={c.Nombre}>{c.Nombre}</option>;
+                })}
             </Form.Control>
-            {errors.years ? errors.years : ""}
           </div>
-        )}
-        <div>
-          <input
-            type="button"
-            value="Macho"
-            name="sexo"
-            onClick={(e) => {
-              onChangeInput(e);
-            }}
-          />
-          <input
-            type="button"
-            value="Hembra"
-            name="sexo"
-            onClick={(e) => {
-              onChangeInput(e);
-            }}
-          />
-          {errors.sexo ? errors.sexo : ""}
-        </div>
-        <div>
-          <Form.Control
-            as="select"
-            onChange={(e) => {
-              console.log("e.target.value", e.target.value);
-              setRaza(e.target.value);
-            }}
-          >
-            {razas &&
-              razas.map((c) => {
-                return <option value={c.Nombre}>{c.Nombre}</option>;
-              })}
-          </Form.Control>
-        </div>
-        {!Object.keys(errors).length ? <button>Crear</button> : ""}
-      </Form>
+          {!Object.keys(errors).length && raza ? (
+            <button>Crear</button>
+          ) : (
+            <h5>Una vez completados los campos podras agregarlo</h5>
+          )}
+        </form>
+      </div>
     </div>
   );
 }
