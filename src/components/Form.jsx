@@ -35,16 +35,27 @@ export default function Formulario({ razas }) {
   const [errors, setErrors] = useState({});
   async function handleSubmit(e) {
     e.preventDefault();
-    await axios.post("http://localhost:1337/mascotas/create", {
-      name: input.name,
-      edadtipo: type,
-      isExact: exact,
-      date: input.date,
-      years: input.years,
-      raza: raza,
-    });
-
-    alert("Mascota creada");
+    try {
+      const response = await axios.post(
+        "http://localhost:1337/mascotas/create",
+        {
+          name: input.name,
+          edadtipo: type,
+          isExact: exact,
+          date: input.date,
+          years: input.years,
+          raza: raza,
+          // sexo: input.sexo,
+        }
+      );
+      if (response === "Creado") {
+        alert("Mascota creada");
+        return;
+      }
+      alert("Intente nuevamente");
+    } catch (err) {
+      alert("hubo un error, intente nuevamente");
+    }
   }
   const onChangeInput = (e) => {
     setInput((prevState) => {
@@ -63,6 +74,8 @@ export default function Formulario({ razas }) {
       )
     );
   };
+  console.log(raza);
+  console.log(razas);
   return (
     <div className={style.all}>
       <div className={style.container}>
@@ -167,7 +180,11 @@ export default function Formulario({ razas }) {
               <option>Agregue una raza</option>
               {razas &&
                 razas.map((c) => {
-                  return <option value={c.Nombre}>{c.Nombre}</option>;
+                  return (
+                    <option key={c._id} value={c._id}>
+                      {c.Nombre}
+                    </option>
+                  );
                 })}
             </Form.Control>
           </div>
