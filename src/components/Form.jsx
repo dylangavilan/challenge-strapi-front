@@ -45,7 +45,7 @@ export default function Formulario({ razas }) {
           date: input.date,
           years: input.years,
           raza: raza,
-          // sexo: input.sexo,
+          sexo: input.sexo,
         }
       );
       if (response === "Creado") {
