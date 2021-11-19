@@ -2,6 +2,25 @@ import React, { useState } from "react";
 import axios from "axios";
 import style from "./form.module.css";
 import { Button, Form } from "react-bootstrap";
+function validate(input, exact) {
+  let errors = {};
+  console.log(input, exact);
+  if (!input.name) {
+    errors.name = "Nombre requerido";
+  }
+  if (!input.sexo) {
+    errors.sexo = "Nombre de usuario requerido";
+  }
+  if (exact && !input.date) {
+    errors.date = "Fecha requerida";
+  } else if (!exact && input.years === 0) {
+    errors.years = "Edad requerida";
+  }
+  if (!input.sexo) {
+    errors.sexo = "Sexo requerido";
+  }
+  return errors;
+}
 export default function Formulario({ razas }) {
   const [exact, setExact] = useState(Boolean);
   const [input, setInput] = useState({
@@ -12,6 +31,7 @@ export default function Formulario({ razas }) {
   });
   const [raza, setRaza] = useState("");
   const [type, setType] = useState("");
+  const [errors, setErrors] = useState({});
   async function handleSubmit(e) {
     e.preventDefault();
     await axios.post("http://localhost:1337/mascotas/create", {
@@ -32,8 +52,17 @@ export default function Formulario({ razas }) {
         [e.target.name]: e.target.value,
       };
     });
+    setErrors(
+      validate(
+        {
+          ...input,
+          [e.target.name]: e.target.value,
+        },
+        exact
+      )
+    );
   };
-  console.log(input);
+  console.log(errors ? errors : "no hay");
   return (
     <div className="container">
       <Form onSubmit={(e) => handleSubmit(e)}>
@@ -76,6 +105,7 @@ export default function Formulario({ razas }) {
                 onChangeInput(e);
               }}
             />
+            {errors.date ? errors.date : ""}
           </div>
         ) : (
           <div>
@@ -99,6 +129,7 @@ export default function Formulario({ razas }) {
               <option value="year">Años</option>
               <option value="month">Meses</option>
             </Form.Control>
+            {errors.years ? errors.years : ""}
           </div>
         )}
         <div>
@@ -118,6 +149,7 @@ export default function Formulario({ razas }) {
               onChangeInput(e);
             }}
           />
+          {errors.sexo ? errors.sexo : ""}
         </div>
         <div>
           <Form.Control
@@ -133,7 +165,7 @@ export default function Formulario({ razas }) {
               })}
           </Form.Control>
         </div>
-        <button type="submit">Crear</button>
+        {!Object.keys(errors).length ? <button>Crear</button> : ""}
       </Form>
     </div>
   );
